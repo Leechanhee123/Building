@@ -75,6 +75,20 @@ window.showToast = function(msg) {
   });
 })();
 
+// Gallery tabs (only on photos.html)
+(function() {
+  const tabs = document.querySelectorAll('.gallery-tab');
+  if (!tabs.length) return;
+  const panels = document.querySelectorAll('.gallery-grid');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      tabs.forEach(t => t.classList.toggle('is-active', t === tab));
+      panels.forEach(p => p.classList.toggle('is-active', p.dataset.panel === target));
+    });
+  });
+})();
+
 // ===== Tweaks =====
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "palette": "forest",

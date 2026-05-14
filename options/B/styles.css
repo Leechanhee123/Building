@@ -1348,3 +1348,87 @@ body.has-banner .site-header {
   font-weight: 500;
   color: var(--ink-2);
 }
+
+/* ===== Gallery Tabs (photos.html) ===== */
+.gallery-tabs {
+  display: flex;
+  gap: 4px;
+  margin: 48px 0 32px;
+  border-bottom: 1px solid var(--ink-mute);
+  flex-wrap: wrap;
+}
+.gallery-tab {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 14px 22px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink-mute);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color .2s, border-color .2s;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  letter-spacing: .01em;
+}
+.gallery-tab small {
+  font-family: var(--serif-en);
+  font-size: 11px;
+  font-style: italic;
+  color: var(--ink-mute);
+  opacity: .65;
+}
+.gallery-tab:hover { color: var(--ink-2); }
+.gallery-tab.is-active {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+.gallery-tab.is-active small { color: var(--ink-soft); opacity: 1; }
+.gallery-grid {
+  display: none;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+.gallery-grid.is-active { display: grid; }
+.gallery-grid figure {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #f0ebe2;
+  position: relative;
+}
+.gallery-grid img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  display: block;
+  transition: transform .5s ease;
+}
+.gallery-grid figure:hover img { transform: scale(1.05); }
+.gallery-grid figcaption {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 14px 16px 12px;
+  background: linear-gradient(to top, rgba(26,24,21,.88), rgba(26,24,21,0));
+  color: #faf7f0;
+  font-family: var(--serif-en);
+  font-style: italic;
+  font-size: 13px;
+  letter-spacing: .02em;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .25s, transform .25s;
+}
+.gallery-grid figure:hover figcaption {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (max-width: 720px) {
+  .gallery-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .gallery-grid img { height: 180px; }
+  .gallery-tab { padding: 12px 14px; font-size: 14px; }
+}
