@@ -49,13 +49,12 @@ window.showToast = function(msg) {
 };
 
 // ===== Contact form submission to Google Apps Script =====
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVf0PhkPf4gp1h0Nrw501zrA1X03r94My_dY3GR44HeYoZGJ21wKkQ7SfwHB5BipKG/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxTJ_yjqzXjamo5rqnmIQbHhLmvAK3E9pQh-TflRXljA56Qn5-TdKvDBm9lkV-c9sPr/exec';
 
 window.submitContactForm = async function(form, options) {
   options = options || {};
   const formData = new FormData(form);
-  const data = Object.fromEntries(formData);
-  data.page = document.title || location.pathname;
+  formData.append('page', document.title || location.pathname);
 
   const submitBtn = form.querySelector('button[type="submit"]');
   const originalText = submitBtn ? submitBtn.textContent : '';
@@ -68,8 +67,7 @@ window.submitContactForm = async function(form, options) {
     await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(data),
+      body: new URLSearchParams(formData),
     });
     showToast('상담 신청이 접수되었습니다. 곧 연락드리겠습니다.');
     form.reset();
