@@ -75,17 +75,92 @@ window.showToast = function(msg) {
   });
 })();
 
-// Gallery tabs (only on photos.html)
+// Gallery tabs + lightbox (only on photos.html)
 (function() {
   const tabs = document.querySelectorAll('.gallery-tab');
   if (!tabs.length) return;
   const panels = document.querySelectorAll('.gallery-grid');
+
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       const target = tab.dataset.tab;
-      tabs.forEach(t => t.classList.toggle('is-active', t === tab));
+      tabs.forEach(t => {
+        t.classList.toggle('is-active', t === tab);
+        t.setAttribute('aria-selected', t === tab ? 'true' : 'false');
+      });
       panels.forEach(p => p.classList.toggle('is-active', p.dataset.panel === target));
     });
+  });
+
+  // Build lightbox once
+  const lb = document.createElement('div');
+  lb.className = 'lightbox';
+  lb.setAttribute('role', 'dialog');
+  lb.setAttribute('aria-modal', 'true');
+  lb.innerHTML = `
+    <button class="lightbox-close" aria-label="닫기">✕</button>
+    <button class="lightbox-prev" aria-label="이전 사진">‹</button>
+    <button class="lightbox-next" aria-label="다음 사진">›</button>
+    <figure class="lightbox-figure">
+      <img alt="" />
+      <figcaption></figcaption>
+    </figure>
+    <div class="lightbox-counter"></div>
+  `;
+  document.body.appendChild(lb);
+
+  const lbImg = lb.querySelector('img');
+  const lbCap = lb.querySelector('figcaption');
+  const lbCounter = lb.querySelector('.lightbox-counter');
+  let currentList = [];
+  let currentIdx = 0;
+
+  function show() {
+    const fig = currentList[currentIdx];
+    if (!fig) return;
+    const im = fig.querySelector('img');
+    const fc = fig.querySelector('figcaption');
+    lbImg.src = im.src;
+    lbImg.alt = im.alt || '';
+    lbCap.textContent = fc ? fc.textContent : '';
+    lbCounter.textContent = `${currentIdx + 1} / ${currentList.length}`;
+  }
+  function open(panelEl, idx) {
+    currentList = Array.from(panelEl.querySelectorAll('figure'));
+    currentIdx = idx;
+    show();
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function close() {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function prev() {
+    currentIdx = (currentIdx - 1 + currentList.length) % currentList.length;
+    show();
+  }
+  function next() {
+    currentIdx = (currentIdx + 1) % currentList.length;
+    show();
+  }
+
+  panels.forEach(panel => {
+    const items = Array.from(panel.querySelectorAll('figure'));
+    items.forEach((fig, idx) => {
+      fig.addEventListener('click', () => open(panel, idx));
+    });
+  });
+
+  lb.querySelector('.lightbox-close').addEventListener('click', close);
+  lb.querySelector('.lightbox-prev').addEventListener('click', (e) => { e.stopPropagation(); prev(); });
+  lb.querySelector('.lightbox-next').addEventListener('click', (e) => { e.stopPropagation(); next(); });
+  lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
+  document.addEventListener('keydown', (e) => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowLeft') prev();
+    else if (e.key === 'ArrowRight') next();
   });
 })();
 
