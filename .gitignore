@@ -1,0 +1,27 @@
+# Claude Code / OMC tooling
+.claude/
+.omc/
+.playwright-mcp/
+memory/
+MEMORY.md
+
+# Dev/QA screenshots in root
+/*.png
+/*.gif
+/*.jpg
+
+# Scraps
+site/scraps/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Node (if added later)
+node_modules/
