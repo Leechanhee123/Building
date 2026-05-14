@@ -9,6 +9,44 @@
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+
+  const toggle = header.querySelector('.nav-toggle');
+  const nav = header.querySelector('.nav');
+  if (!toggle || !nav) return;
+
+  let backdrop = document.querySelector('.nav-backdrop');
+  if (!backdrop) {
+    backdrop = document.createElement('div');
+    backdrop.className = 'nav-backdrop';
+    document.body.appendChild(backdrop);
+  }
+
+  function openNav() {
+    header.classList.add('nav-open');
+    document.body.classList.add('nav-open');
+    toggle.setAttribute('aria-expanded', 'true');
+    toggle.setAttribute('aria-label', '메뉴 닫기');
+  }
+  function closeNav() {
+    header.classList.remove('nav-open');
+    document.body.classList.remove('nav-open');
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', '메뉴 열기');
+  }
+  function toggleNav() {
+    if (header.classList.contains('nav-open')) closeNav();
+    else openNav();
+  }
+
+  toggle.addEventListener('click', toggleNav);
+  backdrop.addEventListener('click', closeNav);
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && header.classList.contains('nav-open')) closeNav();
+  });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 1100 && header.classList.contains('nav-open')) closeNav();
+  });
 })();
 
 (function() {
