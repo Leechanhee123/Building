@@ -85,7 +85,21 @@
             <option>79A 타입 (126세대)</option><option>79B 타입 (140세대)</option>
           </select>
         </div>
-        <div><label>방문 희망 일시</label><input type="text" name="visit" placeholder="예: 5월 셋째 주 토요일 오후" /></div>
+        <div class="field-row">
+          <div><label>방문 희망일</label><input type="date" name="visit_date" /></div>
+          <div><label>방문 시간대</label>
+            <select name="visit_time">
+              <option value="">시간 선택</option>
+              <option>오전 10:00</option>
+              <option>오전 11:00</option>
+              <option>오후 1:00</option>
+              <option>오후 2:00</option>
+              <option>오후 3:00</option>
+              <option>오후 4:00</option>
+              <option>오후 5:00</option>
+            </select>
+          </div>
+        </div>
         <div><label>문의 사항</label><textarea name="message" placeholder="문의하실 내용을 자유롭게 적어주세요."></textarea></div>
         <div class="submit-row">
           <label class="consent"><input type="checkbox" required /> 개인정보 수집·이용에 동의합니다.</label>

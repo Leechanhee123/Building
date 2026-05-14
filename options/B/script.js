@@ -48,12 +48,32 @@ window.showToast = function(msg) {
   setTimeout(() => t.classList.remove('show'), 2400);
 };
 
+// Set min date to today on visit_date inputs
+(function() {
+  const dates = document.querySelectorAll('input[type="date"][name="visit_date"]');
+  if (!dates.length) return;
+  const today = new Date();
+  const tz = today.getTimezoneOffset() * 60000;
+  const todayStr = new Date(today - tz).toISOString().slice(0, 10);
+  dates.forEach(d => d.min = todayStr);
+})();
+
 // ===== Contact form submission to Google Apps Script =====
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxTJ_yjqzXjamo5rqnmIQbHhLmvAK3E9pQh-TflRXljA56Qn5-TdKvDBm9lkV-c9sPr/exec';
 
 window.submitContactForm = async function(form, options) {
   options = options || {};
   const formData = new FormData(form);
+
+  // Combine visit_date + visit_time into single 'visit' field for the sheet
+  const vDate = formData.get('visit_date');
+  const vTime = formData.get('visit_time');
+  if (vDate || vTime) {
+    formData.append('visit', [vDate, vTime].filter(Boolean).join(' '));
+    formData.delete('visit_date');
+    formData.delete('visit_time');
+  }
+
   formData.append('page', document.title || location.pathname);
 
   const submitBtn = form.querySelector('button[type="submit"]');
